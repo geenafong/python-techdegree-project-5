@@ -12,7 +12,10 @@
                     {{ render_field(field) }}
                 {% endfor %}
                 <input type="submit" value="Edit Entry" class="button">
-                <a href="#" class="button button-secondary">Cancel</a>
+                <a href="{{ url_for('index') }}" class="button button-secondary">Cancel</a>
+                {% for post in posts %}
+                <a href="{{ url_for('delete', post_id=post.post_id) }}" class="button button-secondary">Delete Post</a>
+                {% endfor %}
             </form>
         </div>
     </div>

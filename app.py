@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, abort, flash, redirect, url_for
+from flask import (Flask, request, render_template, 
+                   abort, flash, redirect, url_for)
 import os
 
 import forms
@@ -33,9 +34,17 @@ def detail(post_id):
     return render_template('detail.html', posts=posts)
 
 
-@app.route('/entries/<int:post_id>/edit')
+@app.route('/entries/<int:post_id>/edit', methods=('GET', 'POST'))
 def edit(post_id):
+    post = models.Post.get(models.Post.post_id == post_id)
+    posts = models.Post.select().where(models.Post.post_id == post_id)
     form = forms.PostForm()
+    if request.method == 'GET':
+        form.title.data = post.title
+        form.date.data = post.date
+        form.time_spent.data = post.time_spent
+        form.things_learned.data = post.things_learned
+        form.resources.data = post.resources
     if form.validate_on_submit():
         models.Post.update( title=form.title.data, 
                             date=form.date.data, 
@@ -44,15 +53,14 @@ def edit(post_id):
                             resources=form.resources.data
                           ).where(models.Post.post_id == post_id).execute()
         return redirect(url_for('index'))
-    return render_template('edit.html', form=form, post_id=post_id)
+    return render_template('edit.html', form=form, post_id=post_id, posts=posts)
 
-@app.route('/entries/<id>/delete')
-def delete():
-    pass
+@app.route('/entries/<int:post_id>/delete', methods=['GET', 'DELETE'])
+def delete(post_id):
+    models.Post.delete().where(models.Post.post_id == post_id).execute()
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     models.initialize()
 
 app.run(debug=True, port = 8080, host='0.0.0.0')
-
-

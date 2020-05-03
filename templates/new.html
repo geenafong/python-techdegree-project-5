@@ -12,7 +12,7 @@
                     {{ render_field(field) }}
                 {% endfor %}
                 <input type="submit" value="Publish Entry" class="button">
-                <a href="#" class="button button-secondary">Cancel</a>
+                <a href="{{ url_for('index') }}" class="button button-secondary">Cancel</a>
             </form>
         </div>
     </div>
