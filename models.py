@@ -13,7 +13,7 @@ class Post(Model):
     
     class Meta:
         database = DATABASE
-        order_by = ('-date',)   
+        order_by = ('-date',)
 
 def initialize():
     DATABASE.connect()
